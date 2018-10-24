@@ -67,10 +67,10 @@ namespace SimpleBlockChain.Core.Model
         public bool TryAdd(Block block)
         {
             lock(_syncLock)
-            {                
+            {
                 Block latest = GetLatest();
                 Miner miner = new Miner();
-                block.PreviousHash = latest.PreviousHash;
+                block.PreviousHash = latest.Hash;
                 miner.Mine(block, Difficulty);
                 var chainedBlock = new ChainedBlock { Block = block, PreviousBlock = latest };
                 if (chainedBlock.IsValid)
@@ -81,7 +81,7 @@ namespace SimpleBlockChain.Core.Model
                     return true;
                 }
                 return false;
-            }            
+            }
         }
 
         public bool IsValid => _blocks.AsParallel().All(block => block.IsValid);
